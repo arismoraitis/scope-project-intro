@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@theme {
+    --color-scope-red: #ff0000;
+    --color-scope-dark-gray: #202123;
+    --color-scope-gray: #999999;
+
+}
 /*:root {*/
 /*  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;*/
 /*  line-height: 1.5;*/
