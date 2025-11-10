@@ -9,7 +9,7 @@ type CounterState = {
 
 
 type Action =
-    | {type: "INCREASE"}
+| {type: "INCREASE"}
 | {type: "DECREASE"}
 | {type: "RESET"};
 
@@ -20,8 +20,11 @@ const initialState: CounterState = {
     time: "",
 }
 
-
 const getCurrentTime = () => new Date().toLocaleTimeString();
+
+
+// ο τύπος του state είναι CounterState, ο τύπος του action είναι Action και ο τύπος του return σε αυτή την περίπτωση θέλουμε να είναι ίδιος με CounterState
+// Αν π.χ στο return θέλαμε να εμφανίζεται και ένα title τότε θα φτιάχναμε νέο type και θα βάζαμε αυτό στη θέση του CounterState για το return
 
 function reducer (state:CounterState, action:Action): CounterState {
     switch (action.type) {
