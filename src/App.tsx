@@ -9,7 +9,7 @@
 // import NameChanger from "./components/NameChanger.tsx";
 // import CounterWithMoreStates from "./components/CounterWithMoreStates.tsx";
 // import CounterAdvanced from "./components/CounterAdvanced.tsx";
-import Layout from "./components/Layout.tsx";
+// import Layout from "./components/Layout.tsx";
 // import CounterWithCustomHook from "./components/CounterWithCustomHook.tsx";
 // import CounterAdvancedWithCustomHook from "./components/CounterAdvancedWithCustomHook.tsx";
 // import CounterWithReducer from "./components/CounterWithReducer.tsx";
@@ -19,25 +19,25 @@ import HomePage from "./pages/HomePage.tsx";
 import NameChangerPage from "./pages/NameChangerPage.tsx";
 import OnlineStatusPage from "./pages/OnlineStatusPage.tsx";
 import UserPage from "./pages/UserPage.tsx";
+import RouterLayout from "./components/RouterLayout.tsx";
 
 function App() {
 
   return (
     <>
 <BrowserRouter>
-    <Layout>
+    {/*<Layout>*/}
         <Routes>
-
-        <Route index element={ <HomePage/> }/>
-
+<Route element={<RouterLayout />}>
+    <Route index element={ <HomePage/> }/>
+</Route>
             <Route path="examples?">
         <Route path="name-changer" element={ <NameChangerPage/> } />
         <Route path="online-status" element={ <OnlineStatusPage/> } />
         <Route path="users/:userId" element={<UserPage/> } />
 </Route>
-
     </Routes>
-             </Layout>
+             {/*</Layout>*/}
 </BrowserRouter>
 
 {/*<NameChanger/>*/}
