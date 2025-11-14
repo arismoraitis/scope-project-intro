@@ -12,7 +12,12 @@ export const productSchema = z.object({
         .min(1, "Required")
         .regex(/^[a-zA-Z0-9_\-]+$/, "Slug must use only latin letters and numbers, - or _"),
     description: z.string().optional(),
-    image: z.url( "Must be a valid URL" ).optional(),
+    image: z
+        .union([
+            z.url({ error: "Must be a valid URL" }),
+            z.literal(""),
+        ])
+        .optional(),
     price: z.coerce.number().nonnegative("Must be greater than 0"),
     sort: z.coerce.number().int().min(0, "Must be greater than 0"),
     is_active: z.boolean(),
@@ -20,7 +25,10 @@ export const productSchema = z.object({
     category_id: z.coerce.number().int().min(1,"Category is Required")
 });
 
-export type Product = z.infer<typeof productSchema>;
+export type ProductType = z.infer<typeof productSchema>;
+
+export const productFormSchema = productSchema.omit({ id: true });
+export type ProductFormType = z.infer<typeof productFormSchema>;
 
 // export type Product = {
 //     id: number;
@@ -47,7 +55,7 @@ export type UpdateProductValue = {
 }
 
 // θέλουμε να πάρουμε array of objects γι'αυτό βάζουμε array στο Product type στο Promise
-export async function getProducts (): Promise<Product[]> {
+export async function getProducts (): Promise<ProductType[]> {
     const res = await fetch(`${API_URL}/tenants/${TENANT_ID}/products/`, {})
     if (!res.ok) throw new Error ("Failed to load products.");
     const data = await res.json();
@@ -56,7 +64,7 @@ export async function getProducts (): Promise<Product[]> {
 }
 
 // θέλουμε να πάρουμε ένα προϊόν άρα ένα object και όχι το array με όλα τα objects, οπότε δεν βάζουμε array.
-export async function getProduct (id: number): Promise<Product> {
+export async function getProduct (id: number): Promise<ProductType> {
     const res = await fetch(`${API_URL}/tenants/${TENANT_ID}/products/${id}`, {})
     if (!res.ok) throw new Error ("Failed to load product" + id);
     const data = await res.json();
@@ -65,9 +73,12 @@ export async function getProduct (id: number): Promise<Product> {
 }
 
 // Για να κάνουμε update πρέπει να χρησιμοποιήσουμε PUT η οποία στο Documentation περιμένει ένα body (data) με όλα τα στοιχεία του Product.
-export async function updateProduct (id: number, data: UpdateProductValue): Promise<Product> {
+export async function updateProduct (id: number, data: UpdateProductValue): Promise<ProductType> {
 const res = await fetch(`${API_URL}/tenants/${TENANT_ID}/products/${id}`, {
     method: 'PUT',
+    headers: {
+        "Content-Type": "application/json",
+    },
     body: JSON.stringify(data),
 });
 if (!res.ok) throw new Error ("Failed to update product" + id);
