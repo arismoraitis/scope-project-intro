@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 
 import {useState, useEffect} from "react";
-import type {Product} from '@/api/products.ts';
+import type {ProductType} from '@/api/products.ts';
 import {getProducts, deleteProduct} from '@/api/products.ts';
 import {Button} from "@/components/ui/button.tsx";
 import {useNavigate} from "react-router";
@@ -18,7 +18,7 @@ import {Pencil, Trash} from "lucide-react";
 
 const ProductList = () => {
 
-const [products, setProducts] = useState <Product[]> ([])
+const [products, setProducts] = useState <ProductType[]> ([])
 
 const [loading, setLoading] = useState<boolean>(true);
 

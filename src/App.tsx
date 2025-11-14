@@ -37,8 +37,9 @@ function App() {
 
             <Route path="products" element={<RouterLayout />} >
             <Route index element={<ProductList/>}/>
-                {/*<Route path="new" element={<Product/>}/>*/}
-                <Route path=":productId" element={<Product/>}/>
+                {/*Εάν θέλω να καλώ το ίδιο component για διαφορετική διαδικασία τότε θα σπάω αυτές τις διαδικασίες σε modes.*/}
+                <Route path="new" element={<Product mode="create"/>}/>
+                <Route path=":productId" element={<Product mode="edit"/>}/>
         </Route>
 
 {/*<Route element={<RouterLayout />}>*/}

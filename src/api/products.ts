@@ -43,7 +43,7 @@ export type ProductFormType = z.infer<typeof productFormSchema>;
 //     category_id?: number | undefined,
 // }
 
-export type UpdateProductValue = {
+export type UpdateProductValues = {
     name: string;
     slug: string;
     description?: string;
@@ -53,6 +53,10 @@ export type UpdateProductValue = {
     is_favorite: boolean;
     sort: number;
 }
+
+export type CreateProductValues =  UpdateProductValues;
+
+
 
 // θέλουμε να πάρουμε array of objects γι'αυτό βάζουμε array στο Product type στο Promise
 export async function getProducts (): Promise<ProductType[]> {
@@ -72,8 +76,23 @@ export async function getProduct (id: number): Promise<ProductType> {
     return data;
 }
 
+// Εγώ στέλνω CreateProductValues  και το API μου επιστρέφει ProductType
+export async function createProduct (data: CreateProductValues): Promise<ProductType> {
+    const res = await fetch(`${API_URL}/tenants/${TENANT_ID}/products/`, {
+
+    method: 'POST',
+        headers: {
+        "Content-Type": "application/json",
+    },
+        body: JSON.stringify(data),
+
+});
+    if (!res.ok) throw new Error ("Failed to create product");
+    return await res.json();
+}
+
 // Για να κάνουμε update πρέπει να χρησιμοποιήσουμε PUT η οποία στο Documentation περιμένει ένα body (data) με όλα τα στοιχεία του Product.
-export async function updateProduct (id: number, data: UpdateProductValue): Promise<ProductType> {
+export async function updateProduct (id: number, data: UpdateProductValues): Promise<ProductType> {
 const res = await fetch(`${API_URL}/tenants/${TENANT_ID}/products/${id}`, {
     method: 'PUT',
     headers: {
@@ -81,10 +100,9 @@ const res = await fetch(`${API_URL}/tenants/${TENANT_ID}/products/${id}`, {
     },
     body: JSON.stringify(data),
 });
+
 if (!res.ok) throw new Error ("Failed to update product" + id);
 return res.json();
-
-
 
 }
 

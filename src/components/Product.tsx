@@ -1,7 +1,7 @@
 import {useNavigate, useParams} from "react-router";
 import {useForm} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {getProduct, productFormSchema, type ProductFormType, updateProduct} from "@/api/products.ts"
+import {getProduct, productFormSchema, type ProductFormType, updateProduct, createProduct} from "@/api/products.ts"
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea.tsx";
@@ -9,13 +9,22 @@ import {Switch} from "@/components/ui/switch.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {useEffect} from "react";
 
+type ProductModeProps = {
+mode?: "edit" | "create";
+}
 
-const Product = () => {
 
-const {productId} = useParams();
+const Product = ({mode}: ProductModeProps) => {
+
+    //ελέγχουμε εάν υπάρχει productId
+const {productId} = useParams<{productId: string}>();
 const navigate = useNavigate();
 
-const {
+    //Η συνθήκη mode = edit παίρνει μεταβλητή isEdit για να συγκριθεί στο html παρακάτω
+    const isEdit = mode === "edit";
+
+
+    const {
 register,
     handleSubmit,
     setValue,
@@ -41,11 +50,18 @@ register,
 
     const onSubmit = async (data: ProductFormType) => {
         try {
-            if (!productId) return;
-            await updateProduct(Number(productId), data);
-            console.log("Product updated successfully.");
-            navigate("/products");
-        } catch (error) {
+            if (isEdit) {
+                await updateProduct(Number(productId), data);
+                console.log("Product updated successfully.");
+            }
+            else
+                {
+                    await createProduct(data);
+                    console.log("Product created successfully.");
+                }
+                navigate("/products");
+        }
+        catch (error) {
             console.log(error);
         }
     };
@@ -86,7 +102,10 @@ register,
 <form
     onSubmit={handleSubmit(onSubmit)}
     className="max-w-xl mx-auto mt-12 p-8 border rounded-lg space-y-6">
-<h1 className="text-xl font-bold">Edit Product</h1>
+<h1 className="text-xl font-bold mb-4">
+
+    {isEdit ? "Edit Product" : "Create New Product"}
+</h1>
 <div>
     <Label className="mb-2" htmlFor="name">
         Name</Label>
